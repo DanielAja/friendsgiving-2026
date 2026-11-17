@@ -113,13 +113,50 @@ dialog form { display: grid; gap: 12px; }
 .btns { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
 footer { margin-top: 40px; color: var(--muted); font-size: .85rem; display: grid; gap: 4px; }
 footer a { color: inherit; }
+/* ---- Holiday theme (auto on 1 Nov – 15 Feb; toggle at top) ---- */
+.topbar { display: flex; justify-content: flex-end; margin: -12px 0 10px; }
+.toggle {
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px;
+  font-size: .85rem; background: var(--card); border: 1px solid var(--line); color: var(--ink);
+}
+.toggle .sw { width: 30px; height: 18px; border-radius: 999px; background: var(--line); position: relative; transition: background .2s; flex: none; }
+.toggle .sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.3); transition: transform .2s; }
+.toggle[aria-pressed="true"] .sw { background: var(--accent); }
+.toggle[aria-pressed="true"] .sw::after { transform: translateX(12px); }
+#snow, #pines { position: fixed; left: 0; pointer-events: none; display: none; }
+#snow { inset: 0; width: 100%; height: 100%; z-index: 0; }
+#pines { bottom: 0; width: 100%; height: 150px; z-index: 0; }
+.wrap { position: relative; z-index: 1; }
+html.holiday {
+  --bg: #eef3f1; --card: #ffffff; --ink: #17261f; --muted: #5d6f66; --line: #d6e2dc;
+  --accent: #1f6b47; --accent-ink: #ffffff; --accent-soft: #dcefe4;
+  --main: #b3283a; --side: #1f6b47; --dessert: #c2537a; --drink: #2f6fa3; --other: #a8823a;
+  --tree: #2c5e45; --tree2: #3f7a5b; --snowcap: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  html.holiday {
+    --bg: #0e1a22; --card: #15242d; --ink: #e9f1ef; --muted: #9db2ab; --line: #24363f;
+    --accent: #e0545f; --accent-ink: #0e1a22; --accent-soft: #3a1f25;
+    --main: #e0545f; --side: #6fbf8e; --dessert: #e88bb0; --drink: #80b9e6; --other: #d8b56a;
+    --tree: #10271d; --tree2: #173628; --snowcap: #dfe9ee;
+  }
+}
+html.holiday body { background: linear-gradient(to bottom, var(--bg), color-mix(in srgb, var(--bg) 85%, var(--accent) 15%)) fixed; }
+html.holiday #snow, html.holiday #pines { display: block; }
+html.holiday .wrap { padding-bottom: 170px; }
+html.holiday header h1 .t::after { content: " ❄️"; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 </style>
 </head>
 <body>
+<canvas id="snow" aria-hidden="true"></canvas>
+<svg id="pines" aria-hidden="true" preserveAspectRatio="xMidYMax slice" viewBox="0 0 1200 150"></svg>
 <div class="wrap">
+  <div class="topbar">
+    <button type="button" class="toggle" id="holidayToggle" aria-pressed="false"><span>❄️ Holiday theme</span><span class="sw" aria-hidden="true"></span></button>
+  </div>
   <header>
-    <h1>🦃 Friendsgiving 2026</h1>
+    <h1><span class="t">🦃 Friendsgiving 2026</span></h1>
     <p>Say what you're bringing so we don't end up with six pies and no potatoes. No account needed.</p>
   </header>
 
@@ -432,6 +469,81 @@ footer a { color: inherit; }
   load();
   setInterval(() => { if (!document.hidden && !document.querySelector('dialog[open]')) load(); }, 20000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
+})();
+</script>
+<script>
+(() => {
+  // Holiday theme: on by default from 1 Nov to 15 Feb. A manual choice lasts for the current season only.
+  const root = document.documentElement, btn = document.getElementById('holidayToggle');
+  const now = new Date(), m = now.getMonth(), d = now.getDate();
+  const inSeason = m >= 10 || m === 0 || (m === 1 && d <= 15);
+  const season = String(m >= 10 ? now.getFullYear() : now.getFullYear() - 1);
+  let pref = null;
+  try { pref = JSON.parse(localStorage.getItem('fg26.holiday') || 'null'); } catch {}
+  let on = pref && pref.season === season ? !!pref.on : inSeason;
+  const meta = document.querySelector('meta[name=theme-color]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+
+  // Pine trees along the bottom (back row lighter, front row darker, snow caps on top).
+  const svg = document.getElementById('pines');
+  let rnd = 7; const r = () => (rnd = (rnd * 9301 + 49297) % 233280) / 233280;
+  const tree = (x, h, w, fill) => {
+    const base = 150, tiers = 3; let out = `<rect x="${x - w*.05}" y="${base - h*.12}" width="${w*.1}" height="${h*.12}" fill="${fill}"/>`;
+    for (let i = 0; i < tiers; i++) {
+      const top = base - h + i * h * .22, bot = base - h*.12 - (tiers - 1 - i) * h * .18, half = w/2 * (0.55 + i * .22);
+      out += `<polygon points="${x},${top} ${x - half},${bot} ${x + half},${bot}" fill="${fill}"/>`;
+    }
+    const capH = h * .14, capW = w * .14;
+    out += `<polygon points="${x},${base - h} ${x - capW},${base - h + capH} ${x + capW},${base - h + capH}" fill="var(--snowcap)" opacity=".9"/>`;
+    return out;
+  };
+  let html = `<rect x="0" y="138" width="1200" height="12" fill="var(--snowcap)" opacity=".85"/>`;
+  for (let x = 10; x < 1220; x += 38 + r() * 30) html += tree(x, 70 + r() * 45, 46 + r() * 20, 'var(--tree2)');
+  for (let x = 30; x < 1220; x += 70 + r() * 70) html += tree(x, 95 + r() * 50, 60 + r() * 24, 'var(--tree)');
+  html += `<rect x="0" y="144" width="1200" height="6" fill="var(--snowcap)"/>`;
+  svg.innerHTML = html;
+
+  // Snow.
+  const cv = document.getElementById('snow'), ctx = cv.getContext('2d');
+  let flakes = [], raf = 0, W = 0, H = 0, dpr = 1;
+  function size() {
+    dpr = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const n = Math.round(Math.min(160, W * H / 9000));
+    while (flakes.length < n) flakes.push(mk(true));
+    flakes.length = n;
+  }
+  function mk(any) { const z = Math.random(); return { x: Math.random() * W, y: any ? Math.random() * H : -10, r: 1 + z * 2.6, v: .35 + z * 1.1, s: Math.random() * 6.28, a: .45 + z * .5 }; }
+  function draw(step) {
+    ctx.clearRect(0, 0, W, H);
+    const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+    ctx.fillStyle = dark ? '#ffffff' : '#9fb7c4';
+    for (const f of flakes) {
+      if (step) { f.y += f.v; f.s += .012; f.x += Math.sin(f.s) * .4; if (f.y > H + 5) Object.assign(f, mk(false)); if (f.x > W + 5) f.x = -5; if (f.x < -5) f.x = W + 5; }
+      ctx.globalAlpha = f.a; ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, 6.283); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+  function loop() { draw(true); raf = requestAnimationFrame(loop); }
+  function start() { cancelAnimationFrame(raf); size(); if (reduce.matches) draw(false); else loop(); }
+  function stop() { cancelAnimationFrame(raf); ctx.clearRect(0, 0, W, H); }
+  addEventListener('resize', () => { if (on) start(); });
+  reduce.addEventListener?.('change', () => { if (on) start(); });
+  document.addEventListener('visibilitychange', () => { if (!on) return; if (document.hidden) cancelAnimationFrame(raf); else start(); });
+
+  function apply() {
+    root.classList.toggle('holiday', on);
+    btn.setAttribute('aria-pressed', String(on));
+    btn.title = on ? 'Turn the holiday theme off' : 'Turn the holiday theme on';
+    if (meta) meta.content = on ? '#1f6b47' : '#b5532a';
+    on ? start() : stop();
+  }
+  btn.addEventListener('click', () => {
+    on = !on;
+    try { localStorage.setItem('fg26.holiday', JSON.stringify({ season, on })); } catch {}
+    apply();
+  });
+  apply();
 })();
 </script>
 </body>
