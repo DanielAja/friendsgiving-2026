@@ -5,252 +5,316 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Friendsgiving 2026</title>
 <meta name="description" content="Say what you're bringing to Friendsgiving 2026. No account needed.">
-<meta name="theme-color" content="#b5532a">
+<meta name="theme-color" content="#f6efe4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14100d" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦃</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #fbf5ec; --card: #ffffff; --ink: #2b1d14; --muted: #7a6656; --line: #ecdfcd;
-  --accent: #b5532a; --accent-ink: #ffffff; --accent-soft: #f6e1d3;
-  --main: #b5532a; --side: #6f8a3c; --dessert: #b0427a; --drink: #3a77a8; --other: #8a6d3b;
-  --shadow: 0 1px 2px rgba(60,30,10,.06), 0 6px 20px rgba(60,30,10,.06);
-  --radius: 16px;
+  --bg: #f6efe4; --card: #fffaf2; --ink: #2a1d15; --muted: #8b7563; --line: #eadbc6; --soft: #f1e5d3;
+  --accent: #b5452a; --accent-ink: #fff; --accent-soft: #f6dccf;
+  --main: #b5452a; --side: #6f8a3c; --dessert: #b0427a; --drink: #3a77a8; --other: #a07a3c;
+  --shadow: 0 1px 0 rgba(60,30,10,.04), 0 8px 24px -12px rgba(60,30,10,.18);
+  --r: 18px; --ease: cubic-bezier(.34,1.56,.64,1);
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1b1410; --card: #261c16; --ink: #f4e9dd; --muted: #b39f8c; --line: #3a2c22;
-    --accent: #e0814f; --accent-ink: #1b1410; --accent-soft: #3a2519;
-    --main: #e0814f; --side: #a6c46b; --dessert: #e27bb0; --drink: #7fb6e2; --other: #cfae72;
-    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25);
+    --bg: #14100d; --card: #1e1813; --ink: #f2e7da; --muted: #a8917d; --line: #31271f; --soft: #2a211a;
+    --accent: #e57a52; --accent-ink: #1a120d; --accent-soft: #3b2219;
+    --main: #e57a52; --side: #a6c46b; --dessert: #e47fb2; --drink: #80b7e3; --other: #d4b072;
+    --shadow: 0 1px 0 rgba(0,0,0,.2), 0 10px 28px -14px rgba(0,0,0,.6);
   }
 }
-* { box-sizing: border-box; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { margin: 0; }
 body {
-  background: var(--bg); color: var(--ink);
-  font: 16px/1.5 Inter, system-ui, -apple-system, sans-serif;
-  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh; color: var(--ink);
+  background: radial-gradient(120% 60% at 50% -10%, var(--accent-soft), transparent 60%) no-repeat, var(--bg);
+  font: 16px/1.5 Inter, system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased;
 }
-.wrap { max-width: 720px; margin: 0 auto; padding: 28px 16px 64px; }
-header h1 {
-  font-family: Fraunces, Georgia, serif; font-weight: 700;
-  font-size: clamp(2rem, 7vw, 2.8rem); line-height: 1.1; margin: 0 0 6px; letter-spacing: -.01em;
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+#fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.wrap {
+  position: relative; z-index: 1; max-width: 520px; margin: 0 auto;
+  padding: max(14px, env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom));
 }
-header p { margin: 0; color: var(--muted); }
-.tally { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 22px; }
+
+/* top bar */
+.top { display: flex; justify-content: space-between; align-items: center; height: 44px; }
+.turkey {
+  position: relative; border: 0; background: none; font-size: 30px; line-height: 1; padding: 4px; margin-left: -4px;
+  transform-origin: 50% 90%;
+}
+.turkey.bob { animation: bob .5s var(--ease); }
+@keyframes bob { 30% { transform: rotate(-14deg) scale(1.15); } 60% { transform: rotate(10deg); } }
+.bubble {
+  position: absolute; left: 44px; top: 6px; white-space: nowrap; font-size: 13px; font-weight: 600;
+  background: var(--ink); color: var(--bg); padding: 4px 10px; border-radius: 12px 12px 12px 4px;
+  opacity: 0; transform: scale(.6) translateX(-6px); transform-origin: 0 100%; pointer-events: none;
+  transition: opacity .2s, transform .3s var(--ease);
+}
+.bubble.on { opacity: 1; transform: none; }
+.fxbtn {
+  display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 99px;
+  border: 1px solid var(--line); background: color-mix(in srgb, var(--card) 70%, transparent);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); font-size: 13px; color: var(--muted);
+  transition: transform .2s var(--ease);
+}
+.fxbtn:active { transform: scale(.92); }
+.fxbtn .ic { display: inline-block; transition: transform .5s var(--ease); }
+.fxbtn[aria-pressed="true"] { color: var(--ink); }
+.fxbtn[aria-pressed="true"] .ic { transform: rotate(180deg); }
+.fxbtn[aria-pressed="false"] .ic { filter: grayscale(1); opacity: .6; }
+
+/* hero */
+.hero { padding: 18px 0; }
+.kicker { margin: 0; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+h1 {
+  font-family: Fraunces, Georgia, serif; font-weight: 700; letter-spacing: -.025em;
+  font-size: clamp(2.6rem, 13vw, 3.6rem); line-height: .95; margin: 6px 0 10px;
+}
+h1 .leaf { display: inline-block; font-size: .5em; vertical-align: .55em; margin-left: 4px; transition: transform .6s var(--ease); cursor: pointer; }
+h1 .leaf:hover, h1 .leaf.spin { transform: rotate(200deg) scale(1.2); }
+.sub { margin: 0; color: var(--muted); max-width: 30ch; }
+.plate { display: flex; height: 8px; border-radius: 99px; overflow: hidden; background: var(--soft); margin: 20px 0 8px; gap: 2px; }
+.plate span { height: 100%; transition: flex-grow .6s var(--ease); min-width: 0; }
+.stats { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; color: var(--muted); margin: 0; }
+.stats b { color: var(--ink); font-weight: 600; }
+.legend { display: flex; gap: 10px; }
+.legend i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 4px; vertical-align: 1px; }
+
+/* card + form */
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); }
+form.add { padding: 14px; display: grid; gap: 10px; margin-top: 6px; }
+.field {
+  width: 100%; min-width: 0; border: 1px solid transparent; background: var(--soft); border-radius: 12px;
+  padding: 12px 14px; outline: none; transition: border-color .2s, background .2s; font-size: 16px;
+}
+.field::placeholder { color: var(--muted); opacity: .8; }
+.field:focus { border-color: var(--accent); background: var(--card); }
+.field.big { font-size: 18px; font-weight: 500; padding: 14px; }
+.chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 -14px; padding: 2px 14px; }
+.chips::-webkit-scrollbar { display: none; }
 .chip {
-  display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px;
-  background: var(--card); border: 1px solid var(--line); font-size: .9rem; color: var(--muted);
+  flex: none; display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border-radius: 99px;
+  border: 1px solid var(--line); background: transparent; font-size: 14px; transition: transform .2s var(--ease), background .2s, border-color .2s;
 }
-.chip b { color: var(--ink); font-weight: 600; }
-.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.chip .e { display: inline-block; }
+.chip[aria-checked="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip[aria-checked="true"] .e { animation: hop .45s var(--ease); }
+.chip:active { transform: scale(.93); }
+@keyframes hop { 40% { transform: translateY(-6px) rotate(-12deg) scale(1.2); } }
+.row2 { display: flex; gap: 8px; align-items: center; }
+.stepper { display: inline-flex; align-items: center; background: var(--soft); border-radius: 12px; height: 44px; flex: none; }
+.stepper button { width: 40px; height: 44px; border: 0; background: none; font-size: 20px; color: var(--muted); border-radius: 12px; }
+.stepper button:active { background: var(--line); }
+.stepper output { min-width: 28px; text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; display: inline-block; }
+.stepper output.pop { animation: pop .3s var(--ease); }
+@keyframes pop { 40% { transform: scale(1.45); } }
+.notebtn { border: 0; background: none; color: var(--muted); font-size: 14px; padding: 8px 4px; }
+.notebtn:hover { color: var(--ink); }
+.go {
+  position: relative; height: 50px; border: 0; border-radius: 14px; background: var(--accent); color: var(--accent-ink);
+  font-weight: 600; font-size: 16px; transition: transform .15s, filter .2s; overflow: hidden;
+}
+.go:active { transform: scale(.97); }
+.go:disabled { filter: saturate(.4) opacity(.7); }
+.go .arrow { display: inline-block; transition: transform .3s var(--ease); }
+.go:hover .arrow { transform: translateX(4px); }
 
-.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
-form.add { padding: 18px; display: grid; gap: 12px; }
-form.add h2, section h2 { font-family: Fraunces, Georgia, serif; font-size: 1.25rem; margin: 0; }
-.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-@media (max-width: 520px) { .row { grid-template-columns: 1fr; } }
-label { display: grid; gap: 4px; font-size: .85rem; font-weight: 500; color: var(--muted); }
-input, select, textarea {
-  font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line);
-  border-radius: 10px; padding: 10px 12px; width: 100%; min-width: 0;
+/* list */
+section.list { margin-top: 30px; }
+h2 { font-family: Fraunces, Georgia, serif; font-weight: 500; font-size: 22px; margin: 0 0 6px; letter-spacing: -.01em; }
+.group { margin-top: 14px; }
+.group h3 { display: flex; align-items: center; gap: 6px; margin: 0 0 6px 4px; font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.group h3 i { width: 6px; height: 6px; border-radius: 50%; }
+.items { display: grid; gap: 6px; }
+.item {
+  display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 14px;
+  background: var(--card); border: 1px solid var(--line);
 }
-input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
-.cats { display: flex; flex-wrap: wrap; gap: 6px; }
-.cats input { position: absolute; opacity: 0; pointer-events: none; }
-.cats label {
-  display: inline-flex; flex-direction: row; align-items: center; gap: 6px; cursor: pointer;
-  padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg);
-  color: var(--ink); font-size: .9rem;
+.item.new { animation: arrive .7s var(--ease); }
+@keyframes arrive { 0% { transform: translateY(10px) scale(.96); opacity: 0; } 100% { opacity: 1; } }
+.item .em {
+  flex: none; width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 20px;
+  background: color-mix(in srgb, var(--c) 14%, transparent); border: 0; padding: 0;
 }
-.cats input:checked + span { font-weight: 600; }
-.cats label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
-.cats label:has(input:focus-visible) { outline: 2px solid var(--accent); }
-.qty { display: flex; align-items: center; gap: 8px; }
-.qty input { text-align: center; width: 70px; }
-.qty button { width: 40px; height: 40px; flex: none; }
-button {
-  font: inherit; cursor: pointer; border-radius: 10px; border: 1px solid var(--line);
-  background: var(--card); color: var(--ink); padding: 9px 14px; font-weight: 500;
+.item .em.wiggle { animation: wig .5s var(--ease); }
+@keyframes wig { 25% { transform: rotate(-16deg) scale(1.15); } 60% { transform: rotate(12deg); } }
+.item .mid { flex: 1; min-width: 0; }
+.item .dish { font-weight: 600; overflow-wrap: anywhere; line-height: 1.3; }
+.item .q { font-size: 12px; font-weight: 600; color: var(--muted); background: var(--soft); border-radius: 6px; padding: 1px 6px; margin-left: 6px; vertical-align: 1px; }
+.item .who { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+.item .you { font-size: 11px; font-weight: 600; color: var(--accent); margin-left: 6px; }
+.item .act {
+  flex: none; height: 34px; min-width: 34px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--line);
+  background: transparent; color: var(--muted); font-size: 13px; transition: transform .2s var(--ease), color .2s;
 }
-button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
-button.ghost { background: transparent; }
-button.danger { color: #b3261e; }
-button:disabled { opacity: .6; cursor: default; }
-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-section { margin-top: 28px; }
-.group { margin-top: 16px; }
-.group h3 {
-  display: flex; align-items: center; gap: 8px; margin: 0 0 8px; font-size: .8rem;
-  text-transform: uppercase; letter-spacing: .08em; color: var(--muted);
-}
-.items { display: grid; gap: 8px; }
-.item { padding: 12px 14px; display: flex; gap: 12px; align-items: center; }
-.item .main { flex: 1; min-width: 0; }
-.item .dish { font-weight: 600; overflow-wrap: anywhere; }
-.item .qtyb { color: var(--muted); font-weight: 500; }
-.item .who { color: var(--muted); font-size: .9rem; overflow-wrap: anywhere; }
-.item .note { font-size: .9rem; margin-top: 2px; overflow-wrap: anywhere; }
-.item .actions { display: flex; gap: 6px; flex: none; }
-.item .actions button { padding: 6px 10px; font-size: .85rem; }
-.badge { font-size: .72rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); margin-left: 6px; vertical-align: 1px; }
-.empty { padding: 22px; text-align: center; color: var(--muted); }
-.status { min-height: 1.4em; font-size: .9rem; color: var(--muted); }
-.status.err { color: #b3261e; }
-@media (prefers-color-scheme: dark) { .status.err, button.danger { color: #ff8a80; } }
-
-dialog {
-  border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); color: var(--ink);
-  padding: 20px; width: min(440px, calc(100vw - 32px)); box-shadow: 0 20px 60px rgba(0,0,0,.25);
-}
-dialog::backdrop { background: rgba(20,10,5,.45); }
-dialog h2 { font-family: Fraunces, Georgia, serif; margin: 0 0 6px; font-size: 1.3rem; }
-dialog p { margin: 0 0 14px; color: var(--muted); }
-dialog form { display: grid; gap: 12px; }
-.btns { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
-footer { margin-top: 40px; color: var(--muted); font-size: .85rem; display: grid; gap: 4px; }
+.item .act:hover { color: var(--ink); }
+.item .act:active { transform: scale(.9); }
+.empty { text-align: center; padding: 34px 16px; color: var(--muted); border: 1.5px dashed var(--line); border-radius: var(--r); }
+.empty button { display: block; margin: 0 auto 8px; border: 0; background: none; font-size: 44px; transition: transform .8s var(--ease); }
+.empty button.spin { transform: rotate(360deg); }
+footer { margin-top: 40px; font-size: 12.5px; color: var(--muted); display: grid; gap: 4px; text-align: center; }
 footer a { color: inherit; }
-/* ---- Holiday theme (auto on 1 Nov – 15 Feb; toggle at top) ---- */
-.topbar { display: flex; justify-content: flex-end; margin: -12px 0 10px; }
-.toggle {
-  display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px;
-  font-size: .85rem; background: var(--card); border: 1px solid var(--line); color: var(--ink);
+
+/* toast */
+.toast {
+  position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); z-index: 30;
+  transform: translate(-50%, calc(100% + 80px)); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 99px;
+  font-size: 14px; font-weight: 500; box-shadow: 0 10px 30px rgba(0,0,0,.25); transition: transform .4s var(--ease);
+  width: max-content; max-width: calc(100vw - 32px); text-align: center;
 }
-.toggle .sw { width: 30px; height: 18px; border-radius: 999px; background: var(--line); position: relative; transition: background .2s; flex: none; }
-.toggle .sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.3); transition: transform .2s; }
-.toggle[aria-pressed="true"] .sw { background: var(--accent); }
-.toggle[aria-pressed="true"] .sw::after { transform: translateX(12px); }
-#snow, #pines { position: fixed; left: 0; pointer-events: none; display: none; }
-#snow { inset: 0; width: 100%; height: 100%; z-index: 0; }
-#pines { bottom: 0; width: 100%; height: 150px; z-index: 0; }
-.wrap { position: relative; z-index: 1; }
-html.holiday {
-  --bg: #eef3f1; --card: #ffffff; --ink: #17261f; --muted: #5d6f66; --line: #d6e2dc;
-  --accent: #1f6b47; --accent-ink: #ffffff; --accent-soft: #dcefe4;
-  --main: #b3283a; --side: #1f6b47; --dessert: #c2537a; --drink: #2f6fa3; --other: #a8823a;
-  --tree: #2c5e45; --tree2: #3f7a5b; --snowcap: #ffffff;
+.toast.on { transform: translate(-50%, 0); }
+.toast.err { background: #b3261e; color: #fff; }
+
+/* burst */
+.burst { position: fixed; z-index: 40; pointer-events: none; font-size: 20px; left: 0; top: 0; will-change: transform, opacity; }
+
+/* dialogs: a bottom sheet on phones, a centred card on bigger screens */
+dialog { border: 0; padding: 0; background: transparent; color: var(--ink); max-width: none; max-height: 100dvh; width: 100%; margin: auto 0 0; }
+dialog::backdrop { background: rgba(20,10,5,.4); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+.sheet {
+  background: var(--card); border-radius: 22px 22px 0 0; padding: 10px 18px calc(18px + env(safe-area-inset-bottom));
+  max-width: 520px; margin: 0 auto; animation: up .35s var(--ease);
 }
-@media (prefers-color-scheme: dark) {
-  html.holiday {
-    --bg: #0e1a22; --card: #15242d; --ink: #e9f1ef; --muted: #9db2ab; --line: #24363f;
-    --accent: #e0545f; --accent-ink: #0e1a22; --accent-soft: #3a1f25;
-    --main: #e0545f; --side: #6fbf8e; --dessert: #e88bb0; --drink: #80b9e6; --other: #d8b56a;
-    --tree: #10271d; --tree2: #173628; --snowcap: #dfe9ee;
-  }
+@keyframes up { from { transform: translateY(100%); } }
+.sheet::before { content: ""; display: block; width: 36px; height: 4px; border-radius: 4px; background: var(--line); margin: 0 auto 12px; }
+.sheet h2 { font-size: 22px; margin: 0 0 4px; }
+.sheet p { margin: 0 0 14px; color: var(--muted); font-size: 14px; }
+.sheet form { display: grid; gap: 10px; }
+.sheet .chips { margin: 0 -18px; padding: 2px 18px; }
+.sheet .lbl { font-size: 12px; color: var(--muted); font-weight: 500; margin: 2px 0 -6px 4px; }
+.btns { display: flex; gap: 8px; margin-top: 4px; }
+.btns > * { flex: 1; }
+.ghost { height: 48px; border-radius: 14px; border: 1px solid var(--line); background: transparent; font-weight: 500; }
+.danger { height: 40px; border: 0; background: none; color: #c0392b; font-size: 14px; font-weight: 500; border-radius: 12px; transition: background .2s, color .2s; }
+.danger.armed { color: #fff; background: #c0392b; }
+.err { min-height: 1.2em; color: #c0392b; font-size: 13px; margin: -2px 0 0 4px; }
+@media (prefers-color-scheme: dark) { .danger:not(.armed), .err { color: #ff8a80; } }
+.check { display: flex; align-items: center; gap: 8px; font-size: 14px; margin-left: 4px; }
+.check input { width: 18px; height: 18px; accent-color: var(--accent); }
+@media (min-width: 640px) {
+  .wrap { padding-top: 28px; }
+  dialog { margin: auto; width: min(440px, calc(100vw - 32px)); }
+  .sheet { border-radius: 22px; padding: 22px; animation: rise .3s var(--ease); }
+  .sheet::before { display: none; }
+  @keyframes rise { from { transform: translateY(16px) scale(.97); opacity: 0; } }
 }
-html.holiday body { background: linear-gradient(to bottom, var(--bg), color-mix(in srgb, var(--bg) 85%, var(--accent) 15%)) fixed; }
-html.holiday #snow, html.holiday #pines { display: block; }
-html.holiday .wrap { padding-bottom: 170px; }
-html.holiday header h1 .t::after { content: " ❄️"; }
-.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
 </style>
 </head>
 <body>
-<canvas id="snow" aria-hidden="true"></canvas>
-<svg id="pines" aria-hidden="true" preserveAspectRatio="xMidYMax slice" viewBox="0 0 1200 150"></svg>
+<canvas id="fx" aria-hidden="true"></canvas>
 <div class="wrap">
-  <div class="topbar">
-    <button type="button" class="toggle" id="holidayToggle" aria-pressed="false"><span>❄️ Holiday theme</span><span class="sw" aria-hidden="true"></span></button>
+  <div class="top">
+    <button type="button" class="turkey" id="turkey" aria-label="Say hi to the turkey">🦃<span class="bubble" id="bubble" aria-hidden="true">gobble!</span></button>
+    <button type="button" class="fxbtn" id="fxToggle" aria-pressed="true"><span class="ic" aria-hidden="true">❄️</span><span id="fxLabel">Snow on</span></button>
   </div>
-  <header>
-    <h1><span class="t">🦃 Friendsgiving 2026</span></h1>
-    <p>Say what you're bringing so we don't end up with six pies and no potatoes. No account needed.</p>
+
+  <header class="hero">
+    <p class="kicker">Friends · Food · 2026</p>
+    <h1>Friends&shy;giving<span class="leaf" id="leaf" aria-hidden="true">🍁</span></h1>
+    <p class="sub">Say what you're bringing so we don't end up with six pies and no potatoes.</p>
+    <div class="plate" id="plate" aria-hidden="true"></div>
+    <p class="stats"><span id="tally">Nothing on the table yet</span><span class="legend" id="legend"></span></p>
   </header>
 
-  <div class="tally" id="tally" aria-live="polite"></div>
-
   <form class="add card" id="addForm" autocomplete="off">
-    <h2>I'm bringing…</h2>
-    <div class="row">
-      <label>Your name<input name="name" id="name" maxlength="40" required placeholder="e.g. Sam"></label>
-      <label>Dish<input name="dish" maxlength="80" required placeholder="e.g. Mac and cheese"></label>
+    <label class="sr" for="dish">Dish</label>
+    <input class="field big" id="dish" name="dish" maxlength="80" required placeholder="What are you bringing?">
+    <label class="sr" for="name">Your name</label>
+    <input class="field" id="name" name="name" maxlength="40" required placeholder="Your name">
+    <div class="chips" role="radiogroup" aria-label="Category" id="cats"></div>
+    <div class="row2">
+      <div class="stepper" role="group" aria-label="How many">
+        <button type="button" data-step="-1" aria-label="Fewer">−</button>
+        <output id="qtyOut" aria-live="polite">1</output>
+        <button type="button" data-step="1" aria-label="More">+</button>
+      </div>
+      <button type="button" class="notebtn" id="noteBtn" aria-expanded="false">+ add a note</button>
     </div>
-    <div>
-      <div class="sr" id="catLabel">Category</div>
-      <div class="cats" role="radiogroup" aria-labelledby="catLabel" id="cats"></div>
-    </div>
-    <div class="row">
-      <label>How many
-        <div class="qty">
-          <button type="button" data-step="-1" aria-label="Fewer">−</button>
-          <input name="qty" type="number" inputmode="numeric" min="1" max="99" value="1" aria-label="How many">
-          <button type="button" data-step="1" aria-label="More">+</button>
-        </div>
-      </label>
-      <label>Note (optional)<input name="note" maxlength="140" placeholder="e.g. vegan, serves 8"></label>
-    </div>
-    <div class="btns" style="justify-content: space-between; align-items: center;">
-      <div class="status" id="addStatus" role="status"></div>
-      <button class="primary" type="submit">Add to the list</button>
-    </div>
+    <input class="field" id="note" name="note" maxlength="140" placeholder="e.g. vegan, serves 8" aria-label="Note" hidden>
+    <button class="go" type="submit" id="goBtn">Add to the table <span class="arrow" aria-hidden="true">→</span></button>
   </form>
 
-  <section>
-    <h2>Who's bringing what</h2>
+  <section class="list">
+    <h2>On the table</h2>
     <div id="list"><div class="empty">Loading…</div></div>
   </section>
 
   <footer>
-    <div>You can edit what you added from this device. To edit from another device, set a password when you add it.</div>
+    <div>You can edit what you added from this device. Add a password to edit it from another one.</div>
     <div id="expiry"></div>
-    <div>Open source: <a id="srcLink" href="https://github.com/DanielAja/friendsgiving-2026">view the code on GitHub</a>.</div>
+    <div><a href="https://github.com/DanielAja/friendsgiving-2026">Open source on GitHub</a></div>
   </footer>
 </div>
 
-<!-- Ask for an optional password after adding -->
-<dialog id="pwAsk">
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Optional password after adding -->
+<dialog id="pwAsk"><div class="sheet">
   <form method="dialog" id="pwAskForm">
-    <h2>Add a password?</h2>
-    <p>Optional. With a password you can edit or remove this dish from another phone or computer. Without one, only this device can change it.</p>
-    <label>Password<input name="password" type="password" minlength="4" maxlength="64" autocomplete="new-password" placeholder="At least 4 characters"></label>
-    <div class="status err" id="pwAskStatus"></div>
+    <h2>Lock it with a password?</h2>
+    <p>Optional. A password lets you edit this dish from another phone or computer. Skip it and only this device can change it.</p>
+    <input class="field" name="password" type="password" minlength="4" maxlength="64" autocomplete="new-password" placeholder="At least 4 characters" aria-label="Password">
+    <div class="err" id="pwAskStatus"></div>
     <div class="btns">
       <button type="button" class="ghost" id="pwSkip">Skip</button>
-      <button type="submit" class="primary" value="set">Add with password</button>
+      <button type="submit" class="go">Add with password</button>
     </div>
   </form>
-</dialog>
+</div></dialog>
 
-<!-- Unlock someone's own entry on a new device -->
-<dialog id="unlock">
+<!-- Unlock on a new device -->
+<dialog id="unlock"><div class="sheet">
   <form method="dialog" id="unlockForm">
     <h2>Is this yours?</h2>
     <p id="unlockText">Enter the password you set when you added it.</p>
-    <label>Password<input name="password" type="password" maxlength="64" autocomplete="current-password" required></label>
-    <div class="status err" id="unlockStatus"></div>
+    <input class="field" name="password" type="password" maxlength="64" autocomplete="current-password" required aria-label="Password">
+    <div class="err" id="unlockStatus"></div>
     <div class="btns">
       <button type="button" class="ghost" data-close>Cancel</button>
-      <button type="submit" class="primary">Unlock</button>
+      <button type="submit" class="go">Unlock</button>
     </div>
   </form>
-</dialog>
+</div></dialog>
 
 <!-- Edit -->
-<dialog id="edit">
+<dialog id="edit"><div class="sheet">
   <form method="dialog" id="editForm" autocomplete="off">
     <h2>Edit your dish</h2>
-    <label>Your name<input name="name" maxlength="40" required></label>
-    <label>Dish<input name="dish" maxlength="80" required></label>
-    <label>Category<select name="category" id="editCat"></select></label>
-    <div class="row">
-      <label>How many<input name="qty" type="number" min="1" max="99" required></label>
-      <label>Note<input name="note" maxlength="140"></label>
+    <div class="lbl">Dish</div>
+    <input class="field" name="dish" maxlength="80" required aria-label="Dish">
+    <div class="lbl">Your name</div>
+    <input class="field" name="name" maxlength="40" required aria-label="Your name">
+    <div class="chips" role="radiogroup" aria-label="Category" id="editCats"></div>
+    <div class="row2">
+      <div class="stepper" role="group" aria-label="How many">
+        <button type="button" data-estep="-1" aria-label="Fewer">−</button>
+        <output id="editQty">1</output>
+        <button type="button" data-estep="1" aria-label="More">+</button>
+      </div>
+      <input class="field" name="note" maxlength="140" placeholder="Note" aria-label="Note">
     </div>
-    <label id="pwLabel">Password for other devices<input name="newPassword" type="password" minlength="4" maxlength="64" autocomplete="new-password" placeholder="Leave blank to keep as is"></label>
-    <label style="display:flex;flex-direction:row;align-items:center;gap:8px;color:var(--ink)" id="rmPwLabel"><input type="checkbox" name="removePassword" style="width:auto"> Remove the password</label>
-    <div class="status err" id="editStatus"></div>
-    <div class="btns" style="justify-content: space-between;">
-      <button type="button" class="danger" id="removeBtn">Remove from list</button>
-      <span style="display:flex;gap:8px">
-        <button type="button" class="ghost" data-close>Cancel</button>
-        <button type="submit" class="primary">Save</button>
-      </span>
+    <div class="lbl" id="pwLabel">Password for other devices</div>
+    <input class="field" name="newPassword" type="password" minlength="4" maxlength="64" autocomplete="new-password" placeholder="Leave blank to keep as is" aria-labelledby="pwLabel">
+    <label class="check" id="rmPwLabel"><input type="checkbox" name="removePassword"> Remove the password</label>
+    <div class="err" id="editStatus"></div>
+    <div class="btns">
+      <button type="button" class="ghost" data-close>Cancel</button>
+      <button type="submit" class="go">Save</button>
     </div>
+    <button type="button" class="danger" id="removeBtn">Remove from the table</button>
   </form>
-</dialog>
+</div></dialog>
 
 <script src="config.js"></script>
 <script>
@@ -263,31 +327,111 @@ html.holiday header h1 .t::after { content: " ❄️"; }
     { id: 'drink', label: 'Drinks', emoji: '🍷' },
     { id: 'other', label: 'Other', emoji: '🧺' },
   ];
+  const CAT = Object.fromEntries(CATS.map(c => [c.id, c]));
   const $ = (s, el = document) => el.querySelector(s);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const buzz = (p = 8) => { try { navigator.vibrate && navigator.vibrate(p); } catch {} };
   const store = {
     get(k, d) { try { const v = localStorage.getItem('fg26.' + k); return v ? JSON.parse(v) : d; } catch { return d; } },
     set(k, v) { try { localStorage.setItem('fg26.' + k, JSON.stringify(v)); } catch {} },
   };
+  const replay = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
   let tokens = store.get('tokens', {});
   let items = [];
+  let freshId = null;
 
-  // --- UI setup ---
-  const cats = $('#cats');
-  CATS.forEach((c, i) => {
-    const l = document.createElement('label');
-    l.innerHTML = `<input type="radio" name="category" value="${c.id}" ${i === 0 ? 'checked' : ''}><span>${c.emoji} ${c.label}</span>`;
-    cats.append(l);
-    const o = document.createElement('option'); o.value = c.id; o.textContent = `${c.emoji} ${c.label}`;
-    $('#editCat').append(o);
+  // ---------- toast ----------
+  let toastT;
+  function toast(msg, err) {
+    const t = $('#toast'); t.textContent = msg; t.className = 'toast on' + (err ? ' err' : '');
+    clearTimeout(toastT); toastT = setTimeout(() => { t.className = 'toast' + (err ? ' err' : ''); }, 2600);
+  }
+
+  // ---------- leaf burst ----------
+  function burst(el, n = 14) {
+    if (reduce.matches) return;
+    const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    const bits = ['🍂', '🍁', '❄️', '✨', '🍂'];
+    for (let i = 0; i < n; i++) {
+      const s = document.createElement('span'); s.className = 'burst'; s.textContent = bits[i % bits.length];
+      document.body.append(s);
+      const a = -Math.PI / 2 + (Math.random() - .5) * 2.4, d = 60 + Math.random() * 90;
+      const dx = Math.cos(a) * d, dy = Math.sin(a) * d;
+      s.animate([
+        { transform: `translate(${cx - 10}px, ${cy - 12}px) scale(.4) rotate(0)`, opacity: 1 },
+        { transform: `translate(${cx - 10 + dx}px, ${cy - 12 + dy}px) scale(1) rotate(${(Math.random() - .5) * 360}deg)`, opacity: 1, offset: .55 },
+        { transform: `translate(${cx - 10 + dx * 1.2}px, ${cy + 40 + dy * .2}px) scale(.8) rotate(${(Math.random() - .5) * 540}deg)`, opacity: 0 },
+      ], { duration: 1000 + Math.random() * 500, easing: 'cubic-bezier(.2,.7,.3,1)' }).onfinish = () => s.remove();
+    }
+  }
+
+  // ---------- turkey ----------
+  const LINES = ['gobble!', 'pass the gravy', 'is there pie?', 'save me a seat', 'not the turkey 😳', 'stuffing pls', 'gobble gobble'];
+  let li = 0, taps = [], bubT;
+  $('#turkey').addEventListener('click', (e) => {
+    const t = e.currentTarget, b = $('#bubble');
+    replay(t, 'bob'); buzz(10);
+    b.textContent = LINES[li++ % LINES.length]; b.classList.add('on');
+    clearTimeout(bubT); bubT = setTimeout(() => b.classList.remove('on'), 1400);
+    const now = Date.now(); taps = taps.filter(x => now - x < 1800); taps.push(now);
+    if (taps.length >= 5 && !reduce.matches) { taps = []; stampede(); }
   });
-  const addForm = $('#addForm');
-  addForm.name.value = store.get('name', '');
-  addForm.querySelectorAll('[data-step]').forEach(b => b.addEventListener('click', () => {
-    const q = addForm.qty; q.value = Math.min(99, Math.max(1, (parseInt(q.value, 10) || 1) + Number(b.dataset.step)));
-  }));
-  document.querySelectorAll('dialog [data-close]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
+  function stampede() {
+    const s = document.createElement('span'); s.className = 'burst'; s.textContent = '🦃'; s.style.fontSize = '40px';
+    document.body.append(s); buzz([10, 40, 10]);
+    const y = innerHeight - 90, W = innerWidth;
+    s.animate([0, .25, .5, .75, 1].map((f, i) => ({ transform: `translate(${-60 + f * (W + 120)}px, ${y - (i % 2) * 24}px) scaleX(-1)` })),
+      { duration: 1800, easing: 'linear' }).onfinish = () => s.remove();
+    toast('🦃 the turkey escaped!');
+  }
+  $('#leaf').addEventListener('click', (e) => { replay(e.currentTarget, 'spin'); burst(e.currentTarget, 8); buzz(); });
 
-  // --- API ---
+  // ---------- category chips ----------
+  function makeChips(box) {
+    let value = 'main';
+    CATS.forEach(c => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.setAttribute('role', 'radio');
+      b.dataset.v = c.id; b.innerHTML = `<span class="e" aria-hidden="true">${c.emoji}</span>${c.label}`;
+      b.addEventListener('click', () => { set(c.id); buzz(6); });
+      box.append(b);
+    });
+    function set(v) {
+      value = v;
+      box.querySelectorAll('.chip').forEach(b => {
+        const on = b.dataset.v === v; b.setAttribute('aria-checked', String(on)); b.tabIndex = on ? 0 : -1;
+        if (on) { const e = $('.e', b); e.style.animation = 'none'; void e.offsetWidth; e.style.animation = ''; }
+      });
+    }
+    box.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault();
+      const i = CATS.findIndex(c => c.id === value);
+      const n = CATS[(i + (e.key === 'ArrowRight' ? 1 : CATS.length - 1)) % CATS.length].id;
+      set(n); box.querySelector(`[data-v="${n}"]`).focus();
+    });
+    set('main');
+    return { get: () => value, set };
+  }
+  const addCat = makeChips($('#cats'));
+  const editCat = makeChips($('#editCats'));
+
+  // ---------- add form ----------
+  const addForm = $('#addForm');
+  let qty = 1;
+  addForm.name.value = store.get('name', '');
+  function setQty(out, v) { out.textContent = v; replay(out, 'pop'); }
+  addForm.querySelectorAll('[data-step]').forEach(b => b.addEventListener('click', () => {
+    const n = Math.min(99, Math.max(1, qty + Number(b.dataset.step)));
+    if (n !== qty) { qty = n; setQty($('#qtyOut'), qty); buzz(5); }
+  }));
+  $('#noteBtn').addEventListener('click', (e) => {
+    const n = $('#note'), open = n.hidden; n.hidden = !open; e.currentTarget.setAttribute('aria-expanded', String(open));
+    e.currentTarget.textContent = open ? '− no note' : '+ add a note'; if (open) n.focus(); else n.value = '';
+  });
+  document.querySelectorAll('dialog [data-close]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
+  document.querySelectorAll('dialog').forEach(d => d.addEventListener('click', (e) => { if (e.target === d) d.close(); }));
+
+  // ---------- API ----------
   async function api(path, opts = {}) {
     const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
     const res = await fetch(API + path, { ...opts, headers });
@@ -301,80 +445,80 @@ html.holiday header h1 .t::after { content: " ❄️"; }
     try {
       const data = await api('/api/items');
       items = data.items || [];
-      // Forget tokens for dishes that no longer exist.
       const ids = new Set(items.map(i => i.id));
       let changed = false;
       for (const id of Object.keys(tokens)) if (!ids.has(id)) { delete tokens[id]; changed = true; }
       if (changed) store.set('tokens', tokens);
       if (data.expiresAt) {
         const d = new Date(data.expiresAt);
-        $('#expiry').textContent = `This list clears itself on ${d.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}.`;
+        $('#expiry').textContent = `The list clears itself on ${d.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}.`;
       }
       render();
     } catch (e) {
-      if (!items.length) $('#list').innerHTML = `<div class="empty card"></div>`, $('#list .empty').textContent = e.message;
+      if (!items.length) { $('#list').innerHTML = '<div class="empty"></div>'; $('#list .empty').textContent = e.message; }
     }
   }
 
-  // --- render ---
+  // ---------- render ----------
   function render() {
-    const tally = $('#tally'); tally.innerHTML = '';
-    const total = items.length;
-    const people = new Set(items.map(i => i.name.toLowerCase())).size;
-    tally.append(chip(`<b>${total}</b> dish${total === 1 ? '' : 'es'}`), chip(`<b>${people}</b> ${people === 1 ? 'person' : 'people'}`));
+    const total = items.length, people = new Set(items.map(i => i.name.toLowerCase())).size;
+    $('#tally').innerHTML = total
+      ? `<b>${total}</b> dish${total === 1 ? '' : 'es'} · <b>${people}</b> ${people === 1 ? 'person' : 'people'}`
+      : 'Nothing on the table yet';
+    const plate = $('#plate'), legend = $('#legend');
+    plate.innerHTML = ''; legend.innerHTML = '';
     for (const c of CATS) {
       const n = items.filter(i => i.category === c.id).length;
-      tally.append(chip(`<span class="dot" style="background:var(--${c.id})"></span>${c.label} <b>${n}</b>`));
+      const s = document.createElement('span'); s.style.background = `var(--${c.id})`; s.style.flexGrow = n;
+      plate.append(s);
+      if (n) { const l = document.createElement('span'); l.title = c.label; l.innerHTML = `<i style="background:var(--${c.id})"></i>${n}`; legend.append(l); }
     }
 
     const list = $('#list'); list.innerHTML = '';
-    if (!items.length) {
-      list.innerHTML = '<div class="empty card">Nothing yet. Be the first to claim a dish.</div>';
+    if (!total) {
+      list.innerHTML = '<div class="empty"><button type="button" aria-label="Spin the plate">🍽️</button>The table is empty. Claim the first dish!</div>';
+      $('.empty button', list).addEventListener('click', (e) => { e.currentTarget.classList.toggle('spin'); buzz(); });
       return;
     }
     for (const c of CATS) {
       const group = items.filter(i => i.category === c.id);
       if (!group.length) continue;
       const g = document.createElement('div'); g.className = 'group';
-      g.innerHTML = `<h3><span class="dot" style="background:var(--${c.id})"></span>${c.emoji} ${c.label}</h3><div class="items"></div>`;
+      g.innerHTML = `<h3><i style="background:var(--${c.id})"></i>${c.label}</h3><div class="items"></div>`;
       const box = $('.items', g);
       for (const it of group) box.append(itemEl(it));
       list.append(g);
     }
+    freshId = null;
   }
-
-  function chip(html) { const s = document.createElement('span'); s.className = 'chip'; s.innerHTML = html; return s; }
 
   function itemEl(it) {
-    const el = document.createElement('div'); el.className = 'item card';
+    const c = CAT[it.category] || CAT.other;
+    const el = document.createElement('div'); el.className = 'item' + (it.id === freshId ? ' new' : '');
+    el.style.setProperty('--c', `var(--${c.id})`);
     const mine = !!tokens[it.id];
-    el.innerHTML = `<div class="main"><div><span class="dish"></span> <span class="qtyb"></span></div>
-      <div class="who"></div><div class="note"></div></div><div class="actions"></div>`;
+    el.innerHTML = `<button type="button" class="em" aria-hidden="true" tabindex="-1">${c.emoji}</button>
+      <div class="mid"><div><span class="dish"></span></div><div class="who"></div></div>`;
     $('.dish', el).textContent = it.dish;
-    $('.qtyb', el).textContent = it.qty > 1 ? `×${it.qty}` : '';
-    const who = $('.who', el); who.textContent = 'from ' + it.name;
-    if (mine) { const b = document.createElement('span'); b.className = 'badge'; b.textContent = 'You'; who.append(b); }
-    const note = $('.note', el); if (it.note) note.textContent = it.note; else note.remove();
-    const actions = $('.actions', el);
-    if (mine) {
-      actions.append(btn('Edit', () => openEdit(it)));
-    } else if (it.hasPassword) {
-      actions.append(btn('🔒 Mine?', () => openUnlock(it), 'ghost'));
-    }
+    if (it.qty > 1) { const q = document.createElement('span'); q.className = 'q'; q.textContent = '×' + it.qty; $('.dish', el).after(q); }
+    $('.who', el).textContent = it.name + (it.note ? ' · ' + it.note : '');
+    if (mine) { const y = document.createElement('span'); y.className = 'you'; y.textContent = 'you'; $('.who', el).append(y); }
+    $('.em', el).addEventListener('click', (e) => { replay(e.currentTarget, 'wiggle'); buzz(5); });
+    if (mine) el.append(btn('Edit', () => openEdit(it), `Edit ${it.dish}`));
+    else if (it.hasPassword) el.append(btn('🔒', () => openUnlock(it), `Is ${it.dish} yours? Unlock it with your password`));
     return el;
   }
+  function btn(text, onClick, label) {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'act'; b.textContent = text;
+    if (label) b.setAttribute('aria-label', label);
+    b.addEventListener('click', onClick); return b;
+  }
 
-  function btn(text, onClick, cls = '') { const b = document.createElement('button'); b.type = 'button'; b.textContent = text; if (cls) b.className = cls; b.addEventListener('click', onClick); return b; }
-
-  // --- add ---
+  // ---------- add ----------
   let pendingAdd = null;
   addForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const f = addForm;
-    pendingAdd = {
-      name: f.name.value.trim(), dish: f.dish.value.trim(), note: f.note.value.trim(),
-      category: f.category.value, qty: parseInt(f.qty.value, 10) || 1,
-    };
+    pendingAdd = { name: addForm.name.value.trim(), dish: addForm.dish.value.trim(), note: $('#note').value.trim(), category: addCat.get(), qty };
     if (!pendingAdd.name || !pendingAdd.dish) return;
     $('#pwAskForm').password.value = ''; $('#pwAskStatus').textContent = '';
     $('#pwAsk').showModal();
@@ -388,22 +532,21 @@ html.holiday header h1 .t::after { content: " ❄️"; }
   });
 
   async function submitAdd(password) {
-    const status = $('#addStatus'); status.className = 'status'; status.textContent = 'Adding…';
-    const submit = $('button[type=submit]', addForm); submit.disabled = true;
+    const go = $('#goBtn'); go.disabled = true;
     try {
       const data = await api('/api/items', { method: 'POST', body: JSON.stringify({ ...pendingAdd, password: password || undefined }) });
       tokens[data.item.id] = data.token; store.set('tokens', tokens);
       store.set('name', pendingAdd.name);
-      items.push(data.item); render();
-      addForm.dish.value = ''; addForm.note.value = ''; addForm.qty.value = 1;
-      status.textContent = `Added ${data.item.dish}. Thank you!`;
-      addForm.dish.focus();
-    } catch (e) {
-      status.className = 'status err'; status.textContent = e.message;
-    } finally { submit.disabled = false; }
+      items.push(data.item); freshId = data.item.id; render();
+      burst(go); buzz([12, 30, 12]);
+      addForm.dish.value = ''; qty = 1; $('#qtyOut').textContent = '1';
+      if (!$('#note').hidden) $('#noteBtn').click();
+      toast(`${(CAT[data.item.category] || CAT.other).emoji} ${data.item.dish} is on the table. Thank you!`);
+    } catch (e) { toast(e.message, true); }
+    finally { go.disabled = false; }
   }
 
-  // --- unlock on a new device ---
+  // ---------- unlock on a new device ----------
   let unlockItem = null;
   function openUnlock(it) {
     unlockItem = it;
@@ -413,30 +556,35 @@ html.holiday header h1 .t::after { content: " ❄️"; }
   }
   $('#unlockForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const pw = $('#unlockForm').password.value;
     try {
-      const data = await api(`/api/items/${encodeURIComponent(unlockItem.id)}/unlock`, { method: 'POST', body: JSON.stringify({ password: pw }) });
+      const data = await api(`/api/items/${encodeURIComponent(unlockItem.id)}/unlock`, { method: 'POST', body: JSON.stringify({ password: $('#unlockForm').password.value }) });
       tokens[unlockItem.id] = data.token; store.set('tokens', tokens);
-      $('#unlock').close(); render(); openEdit(unlockItem);
+      $('#unlock').close(); render(); buzz(); openEdit(unlockItem);
     } catch (err) { $('#unlockStatus').textContent = err.message; }
   });
 
-  // --- edit / remove ---
-  let editItem = null;
+  // ---------- edit / remove ----------
+  let editItem = null, editQty = 1;
+  const rm = $('#removeBtn');
   function openEdit(it) {
     editItem = it;
     const f = $('#editForm');
-    f.name.value = it.name; f.dish.value = it.dish; f.category.value = it.category; f.qty.value = it.qty; f.note.value = it.note || '';
+    f.name.value = it.name; f.dish.value = it.dish; f.note.value = it.note || ''; editCat.set(it.category);
+    editQty = it.qty; $('#editQty').textContent = editQty;
     f.newPassword.value = ''; f.removePassword.checked = false;
-    $('#pwLabel').firstChild.textContent = it.hasPassword ? 'Change password for other devices' : 'Add a password for other devices (optional)';
+    $('#pwLabel').textContent = it.hasPassword ? 'Change the password for other devices' : 'Add a password for other devices (optional)';
     $('#rmPwLabel').style.display = it.hasPassword ? 'flex' : 'none';
     $('#editStatus').textContent = '';
+    rm.classList.remove('armed'); rm.textContent = 'Remove from the table';
     $('#edit').showModal();
   }
+  $('#editForm').querySelectorAll('[data-estep]').forEach(b => b.addEventListener('click', () => {
+    const n = Math.min(99, Math.max(1, editQty + Number(b.dataset.estep)));
+    if (n !== editQty) { editQty = n; setQty($('#editQty'), editQty); buzz(5); }
+  }));
   async function authed(path, opts) {
-    try {
-      return await api(path, { ...opts, headers: { 'X-Edit-Token': tokens[editItem.id] || '' } });
-    } catch (e) {
+    try { return await api(path, { ...opts, headers: { 'X-Edit-Token': tokens[editItem.id] || '' } }); }
+    catch (e) {
       if (e.status === 401 || e.status === 403) { delete tokens[editItem.id]; store.set('tokens', tokens); }
       throw e;
     }
@@ -444,7 +592,7 @@ html.holiday header h1 .t::after { content: " ❄️"; }
   $('#editForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const f = $('#editForm');
-    const body = { name: f.name.value.trim(), dish: f.dish.value.trim(), category: f.category.value, qty: parseInt(f.qty.value, 10) || 1, note: f.note.value.trim() };
+    const body = { name: f.name.value.trim(), dish: f.dish.value.trim(), category: editCat.get(), qty: editQty, note: f.note.value.trim() };
     if (f.newPassword.value) {
       if (f.newPassword.value.length < 4) { $('#editStatus').textContent = 'Passwords need at least 4 characters.'; return; }
       body.newPassword = f.newPassword.value;
@@ -453,16 +601,16 @@ html.holiday header h1 .t::after { content: " ❄️"; }
       const data = await authed(`/api/items/${encodeURIComponent(editItem.id)}`, { method: 'PATCH', body: JSON.stringify(body) });
       items = items.map(i => i.id === data.item.id ? data.item : i);
       store.set('name', data.item.name);
-      $('#edit').close(); render();
+      freshId = data.item.id; $('#edit').close(); render(); buzz(); toast('Saved ✨');
     } catch (err) { $('#editStatus').textContent = err.message; }
   });
-  $('#removeBtn').addEventListener('click', async () => {
-    if (!confirm(`Remove "${editItem.dish}" from the list?`)) return;
+  rm.addEventListener('click', async () => {
+    if (!rm.classList.contains('armed')) { rm.classList.add('armed'); rm.textContent = 'Tap again to remove'; buzz(15); return; }
     try {
       await authed(`/api/items/${encodeURIComponent(editItem.id)}`, { method: 'DELETE' });
       items = items.filter(i => i.id !== editItem.id);
       delete tokens[editItem.id]; store.set('tokens', tokens);
-      $('#edit').close(); render();
+      $('#edit').close(); render(); toast(`Removed ${editItem.dish}`);
     } catch (err) { $('#editStatus').textContent = err.message; }
   });
 
@@ -470,77 +618,69 @@ html.holiday header h1 .t::after { content: " ❄️"; }
   setInterval(() => { if (!document.hidden && !document.querySelector('dialog[open]')) load(); }, 20000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
 })();
-</script>
-<script>
+
+// ---------- seasonal sky: drifting leaves and snow (on 1 Nov – 15 Feb by default; toggle at the top) ----------
 (() => {
-  // Holiday theme: on by default from 1 Nov to 15 Feb. A manual choice lasts for the current season only.
-  const root = document.documentElement, btn = document.getElementById('holidayToggle');
+  const btn = document.getElementById('fxToggle'), label = document.getElementById('fxLabel');
   const now = new Date(), m = now.getMonth(), d = now.getDate();
   const inSeason = m >= 10 || m === 0 || (m === 1 && d <= 15);
   const season = String(m >= 10 ? now.getFullYear() : now.getFullYear() - 1);
   let pref = null;
   try { pref = JSON.parse(localStorage.getItem('fg26.holiday') || 'null'); } catch {}
   let on = pref && pref.season === season ? !!pref.on : inSeason;
-  const meta = document.querySelector('meta[name=theme-color]');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-
-  // Pine trees along the bottom (back row lighter, front row darker, snow caps on top).
-  const svg = document.getElementById('pines');
-  let rnd = 7; const r = () => (rnd = (rnd * 9301 + 49297) % 233280) / 233280;
-  const tree = (x, h, w, fill) => {
-    const base = 150, tiers = 3; let out = `<rect x="${x - w*.05}" y="${base - h*.12}" width="${w*.1}" height="${h*.12}" fill="${fill}"/>`;
-    for (let i = 0; i < tiers; i++) {
-      const top = base - h + i * h * .22, bot = base - h*.12 - (tiers - 1 - i) * h * .18, half = w/2 * (0.55 + i * .22);
-      out += `<polygon points="${x},${top} ${x - half},${bot} ${x + half},${bot}" fill="${fill}"/>`;
-    }
-    const capH = h * .14, capW = w * .14;
-    out += `<polygon points="${x},${base - h} ${x - capW},${base - h + capH} ${x + capW},${base - h + capH}" fill="var(--snowcap)" opacity=".9"/>`;
-    return out;
+  const dark = matchMedia('(prefers-color-scheme: dark)');
+  const cv = document.getElementById('fx'), ctx = cv.getContext('2d');
+  let parts = [], raf = 0, W = 0, H = 0, gust = 0;
+  const LEAVES = ['🍂', '🍁'];
+  const mk = (any) => {
+    const leaf = Math.random() < .14, z = Math.random();
+    return { x: Math.random() * W, y: any ? Math.random() * H : -20, z, leaf, ch: LEAVES[(Math.random() * 2) | 0],
+      r: leaf ? 12 + z * 6 : .8 + z * 2, v: leaf ? .45 + z * .5 : .3 + z * .8, s: Math.random() * 6.28, rot: Math.random() * 6.28, a: .35 + z * .55 };
   };
-  let html = `<rect x="0" y="138" width="1200" height="12" fill="var(--snowcap)" opacity=".85"/>`;
-  for (let x = 10; x < 1220; x += 38 + r() * 30) html += tree(x, 70 + r() * 45, 46 + r() * 20, 'var(--tree2)');
-  for (let x = 30; x < 1220; x += 70 + r() * 70) html += tree(x, 95 + r() * 50, 60 + r() * 24, 'var(--tree)');
-  html += `<rect x="0" y="144" width="1200" height="6" fill="var(--snowcap)"/>`;
-  svg.innerHTML = html;
-
-  // Snow.
-  const cv = document.getElementById('snow'), ctx = cv.getContext('2d');
-  let flakes = [], raf = 0, W = 0, H = 0, dpr = 1;
   function size() {
-    dpr = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight;
+    const dpr = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight;
     cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const n = Math.round(Math.min(160, W * H / 9000));
-    while (flakes.length < n) flakes.push(mk(true));
-    flakes.length = n;
+    const n = Math.round(Math.min(90, W * H / 11000));
+    while (parts.length < n) parts.push(mk(true));
+    parts.length = n;
   }
-  function mk(any) { const z = Math.random(); return { x: Math.random() * W, y: any ? Math.random() * H : -10, r: 1 + z * 2.6, v: .35 + z * 1.1, s: Math.random() * 6.28, a: .45 + z * .5 }; }
   function draw(step) {
     ctx.clearRect(0, 0, W, H);
-    const dark = matchMedia('(prefers-color-scheme: dark)').matches;
-    ctx.fillStyle = dark ? '#ffffff' : '#9fb7c4';
-    for (const f of flakes) {
-      if (step) { f.y += f.v; f.s += .012; f.x += Math.sin(f.s) * .4; if (f.y > H + 5) Object.assign(f, mk(false)); if (f.x > W + 5) f.x = -5; if (f.x < -5) f.x = W + 5; }
-      ctx.globalAlpha = f.a; ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, 6.283); ctx.fill();
+    const snow = dark.matches ? '#ffffff' : '#c8b7a4';
+    for (let i = 0; i < parts.length; i++) {
+      const p = parts[i];
+      if (step) {
+        p.y += p.v; p.s += p.leaf ? .02 : .012; p.x += Math.sin(p.s) * (p.leaf ? .9 : .35) + gust * (.3 + p.z); p.rot += p.leaf ? .02 : 0;
+        if (p.y > H + 20) parts[i] = mk(false);
+        if (p.x > W + 20) p.x = -20; else if (p.x < -20) p.x = W + 20;
+      }
+      ctx.globalAlpha = p.a;
+      if (p.leaf) {
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(Math.sin(p.rot) * .8);
+        ctx.font = `${p.r}px serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(p.ch, 0, 0); ctx.restore();
+      } else { ctx.fillStyle = snow; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.283); ctx.fill(); }
     }
-    ctx.globalAlpha = 1;
+    ctx.globalAlpha = 1; gust *= .95;
   }
   function loop() { draw(true); raf = requestAnimationFrame(loop); }
   function start() { cancelAnimationFrame(raf); size(); if (reduce.matches) draw(false); else loop(); }
   function stop() { cancelAnimationFrame(raf); ctx.clearRect(0, 0, W, H); }
+  // A little gust of wind when you scroll.
+  let lastY = scrollY;
+  addEventListener('scroll', () => { gust = Math.max(-3, Math.min(3, gust + (scrollY - lastY) * .04)); lastY = scrollY; }, { passive: true });
   addEventListener('resize', () => { if (on) start(); });
-  reduce.addEventListener?.('change', () => { if (on) start(); });
   document.addEventListener('visibilitychange', () => { if (!on) return; if (document.hidden) cancelAnimationFrame(raf); else start(); });
-
   function apply() {
-    root.classList.toggle('holiday', on);
     btn.setAttribute('aria-pressed', String(on));
-    btn.title = on ? 'Turn the holiday theme off' : 'Turn the holiday theme on';
-    if (meta) meta.content = on ? '#1f6b47' : '#b5532a';
-    on ? start() : stop();
+    label.textContent = on ? 'Snow on' : 'Snow off';
+    btn.setAttribute('aria-label', on ? 'Turn the falling snow and leaves off' : 'Turn the falling snow and leaves on');
+    if (on) start(); else stop();
   }
   btn.addEventListener('click', () => {
     on = !on;
     try { localStorage.setItem('fg26.holiday', JSON.stringify({ season, on })); } catch {}
+    try { navigator.vibrate && navigator.vibrate(8); } catch {}
     apply();
   });
   apply();
