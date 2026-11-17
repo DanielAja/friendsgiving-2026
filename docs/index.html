@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Friendsgiving 2026</title>
+<meta name="description" content="Say what you're bringing to Friendsgiving 2026. No account needed.">
+<meta name="theme-color" content="#b5532a">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦃</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fbf5ec; --card: #ffffff; --ink: #2b1d14; --muted: #7a6656; --line: #ecdfcd;
+  --accent: #b5532a; --accent-ink: #ffffff; --accent-soft: #f6e1d3;
+  --main: #b5532a; --side: #6f8a3c; --dessert: #b0427a; --drink: #3a77a8; --other: #8a6d3b;
+  --shadow: 0 1px 2px rgba(60,30,10,.06), 0 6px 20px rgba(60,30,10,.06);
+  --radius: 16px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1b1410; --card: #261c16; --ink: #f4e9dd; --muted: #b39f8c; --line: #3a2c22;
+    --accent: #e0814f; --accent-ink: #1b1410; --accent-soft: #3a2519;
+    --main: #e0814f; --side: #a6c46b; --dessert: #e27bb0; --drink: #7fb6e2; --other: #cfae72;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25);
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--ink);
+  font: 16px/1.5 Inter, system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 720px; margin: 0 auto; padding: 28px 16px 64px; }
+header h1 {
+  font-family: Fraunces, Georgia, serif; font-weight: 700;
+  font-size: clamp(2rem, 7vw, 2.8rem); line-height: 1.1; margin: 0 0 6px; letter-spacing: -.01em;
+}
+header p { margin: 0; color: var(--muted); }
+.tally { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 22px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px;
+  background: var(--card); border: 1px solid var(--line); font-size: .9rem; color: var(--muted);
+}
+.chip b { color: var(--ink); font-weight: 600; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+form.add { padding: 18px; display: grid; gap: 12px; }
+form.add h2, section h2 { font-family: Fraunces, Georgia, serif; font-size: 1.25rem; margin: 0; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 520px) { .row { grid-template-columns: 1fr; } }
+label { display: grid; gap: 4px; font-size: .85rem; font-weight: 500; color: var(--muted); }
+input, select, textarea {
+  font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line);
+  border-radius: 10px; padding: 10px 12px; width: 100%; min-width: 0;
+}
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+.cats { display: flex; flex-wrap: wrap; gap: 6px; }
+.cats input { position: absolute; opacity: 0; pointer-events: none; }
+.cats label {
+  display: inline-flex; flex-direction: row; align-items: center; gap: 6px; cursor: pointer;
+  padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg);
+  color: var(--ink); font-size: .9rem;
+}
+.cats input:checked + span { font-weight: 600; }
+.cats label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.cats label:has(input:focus-visible) { outline: 2px solid var(--accent); }
+.qty { display: flex; align-items: center; gap: 8px; }
+.qty input { text-align: center; width: 70px; }
+.qty button { width: 40px; height: 40px; flex: none; }
+button {
+  font: inherit; cursor: pointer; border-radius: 10px; border: 1px solid var(--line);
+  background: var(--card); color: var(--ink); padding: 9px 14px; font-weight: 500;
+}
+button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+button.ghost { background: transparent; }
+button.danger { color: #b3261e; }
+button:disabled { opacity: .6; cursor: default; }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+section { margin-top: 28px; }
+.group { margin-top: 16px; }
+.group h3 {
+  display: flex; align-items: center; gap: 8px; margin: 0 0 8px; font-size: .8rem;
+  text-transform: uppercase; letter-spacing: .08em; color: var(--muted);
+}
+.items { display: grid; gap: 8px; }
+.item { padding: 12px 14px; display: flex; gap: 12px; align-items: center; }
+.item .main { flex: 1; min-width: 0; }
+.item .dish { font-weight: 600; overflow-wrap: anywhere; }
+.item .qtyb { color: var(--muted); font-weight: 500; }
+.item .who { color: var(--muted); font-size: .9rem; overflow-wrap: anywhere; }
+.item .note { font-size: .9rem; margin-top: 2px; overflow-wrap: anywhere; }
+.item .actions { display: flex; gap: 6px; flex: none; }
+.item .actions button { padding: 6px 10px; font-size: .85rem; }
+.badge { font-size: .72rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); margin-left: 6px; vertical-align: 1px; }
+.empty { padding: 22px; text-align: center; color: var(--muted); }
+.status { min-height: 1.4em; font-size: .9rem; color: var(--muted); }
+.status.err { color: #b3261e; }
+@media (prefers-color-scheme: dark) { .status.err, button.danger { color: #ff8a80; } }
+
+dialog {
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); color: var(--ink);
+  padding: 20px; width: min(440px, calc(100vw - 32px)); box-shadow: 0 20px 60px rgba(0,0,0,.25);
+}
+dialog::backdrop { background: rgba(20,10,5,.45); }
+dialog h2 { font-family: Fraunces, Georgia, serif; margin: 0 0 6px; font-size: 1.3rem; }
+dialog p { margin: 0 0 14px; color: var(--muted); }
+dialog form { display: grid; gap: 12px; }
+.btns { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+footer { margin-top: 40px; color: var(--muted); font-size: .85rem; display: grid; gap: 4px; }
+footer a { color: inherit; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🦃 Friendsgiving 2026</h1>
+    <p>Say what you're bringing so we don't end up with six pies and no potatoes. No account needed.</p>
+  </header>
+
+  <div class="tally" id="tally" aria-live="polite"></div>
+
+  <form class="add card" id="addForm" autocomplete="off">
+    <h2>I'm bringing…</h2>
+    <div class="row">
+      <label>Your name<input name="name" id="name" maxlength="40" required placeholder="e.g. Sam"></label>
+      <label>Dish<input name="dish" maxlength="80" required placeholder="e.g. Mac and cheese"></label>
+    </div>
+    <div>
+      <div class="sr" id="catLabel">Category</div>
+      <div class="cats" role="radiogroup" aria-labelledby="catLabel" id="cats"></div>
+    </div>
+    <div class="row">
+      <label>How many
+        <div class="qty">
+          <button type="button" data-step="-1" aria-label="Fewer">−</button>
+          <input name="qty" type="number" inputmode="numeric" min="1" max="99" value="1" aria-label="How many">
+          <button type="button" data-step="1" aria-label="More">+</button>
+        </div>
+      </label>
+      <label>Note (optional)<input name="note" maxlength="140" placeholder="e.g. vegan, serves 8"></label>
+    </div>
+    <div class="btns" style="justify-content: space-between; align-items: center;">
+      <div class="status" id="addStatus" role="status"></div>
+      <button class="primary" type="submit">Add to the list</button>
+    </div>
+  </form>
+
+  <section>
+    <h2>Who's bringing what</h2>
+    <div id="list"><div class="empty">Loading…</div></div>
+  </section>
+
+  <footer>
+    <div>You can edit what you added from this device. To edit from another device, set a password when you add it.</div>
+    <div id="expiry"></div>
+    <div>Open source: <a id="srcLink" href="https://github.com/DanielAja/friendsgiving-2026">view the code on GitHub</a>.</div>
+  </footer>
+</div>
+
+<!-- Ask for an optional password after adding -->
+<dialog id="pwAsk">
+  <form method="dialog" id="pwAskForm">
+    <h2>Add a password?</h2>
+    <p>Optional. With a password you can edit or remove this dish from another phone or computer. Without one, only this device can change it.</p>
+    <label>Password<input name="password" type="password" minlength="4" maxlength="64" autocomplete="new-password" placeholder="At least 4 characters"></label>
+    <div class="status err" id="pwAskStatus"></div>
+    <div class="btns">
+      <button type="button" class="ghost" id="pwSkip">Skip</button>
+      <button type="submit" class="primary" value="set">Add with password</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Unlock someone's own entry on a new device -->
+<dialog id="unlock">
+  <form method="dialog" id="unlockForm">
+    <h2>Is this yours?</h2>
+    <p id="unlockText">Enter the password you set when you added it.</p>
+    <label>Password<input name="password" type="password" maxlength="64" autocomplete="current-password" required></label>
+    <div class="status err" id="unlockStatus"></div>
+    <div class="btns">
+      <button type="button" class="ghost" data-close>Cancel</button>
+      <button type="submit" class="primary">Unlock</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Edit -->
+<dialog id="edit">
+  <form method="dialog" id="editForm" autocomplete="off">
+    <h2>Edit your dish</h2>
+    <label>Your name<input name="name" maxlength="40" required></label>
+    <label>Dish<input name="dish" maxlength="80" required></label>
+    <label>Category<select name="category" id="editCat"></select></label>
+    <div class="row">
+      <label>How many<input name="qty" type="number" min="1" max="99" required></label>
+      <label>Note<input name="note" maxlength="140"></label>
+    </div>
+    <label id="pwLabel">Password for other devices<input name="newPassword" type="password" minlength="4" maxlength="64" autocomplete="new-password" placeholder="Leave blank to keep as is"></label>
+    <label style="display:flex;flex-direction:row;align-items:center;gap:8px;color:var(--ink)" id="rmPwLabel"><input type="checkbox" name="removePassword" style="width:auto"> Remove the password</label>
+    <div class="status err" id="editStatus"></div>
+    <div class="btns" style="justify-content: space-between;">
+      <button type="button" class="danger" id="removeBtn">Remove from list</button>
+      <span style="display:flex;gap:8px">
+        <button type="button" class="ghost" data-close>Cancel</button>
+        <button type="submit" class="primary">Save</button>
+      </span>
+    </div>
+  </form>
+</dialog>
+
+<script src="config.js"></script>
+<script>
+(() => {
+  const API = (window.FG_CONFIG && window.FG_CONFIG.apiBase || '').replace(/\/$/, '');
+  const CATS = [
+    { id: 'main', label: 'Main', emoji: '🍗' },
+    { id: 'side', label: 'Side', emoji: '🥔' },
+    { id: 'dessert', label: 'Dessert', emoji: '🥧' },
+    { id: 'drink', label: 'Drinks', emoji: '🍷' },
+    { id: 'other', label: 'Other', emoji: '🧺' },
+  ];
+  const $ = (s, el = document) => el.querySelector(s);
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem('fg26.' + k); return v ? JSON.parse(v) : d; } catch { return d; } },
+    set(k, v) { try { localStorage.setItem('fg26.' + k, JSON.stringify(v)); } catch {} },
+  };
+  let tokens = store.get('tokens', {});
+  let items = [];
+
+  // --- UI setup ---
+  const cats = $('#cats');
+  CATS.forEach((c, i) => {
+    const l = document.createElement('label');
+    l.innerHTML = `<input type="radio" name="category" value="${c.id}" ${i === 0 ? 'checked' : ''}><span>${c.emoji} ${c.label}</span>`;
+    cats.append(l);
+    const o = document.createElement('option'); o.value = c.id; o.textContent = `${c.emoji} ${c.label}`;
+    $('#editCat').append(o);
+  });
+  const addForm = $('#addForm');
+  addForm.name.value = store.get('name', '');
+  addForm.querySelectorAll('[data-step]').forEach(b => b.addEventListener('click', () => {
+    const q = addForm.qty; q.value = Math.min(99, Math.max(1, (parseInt(q.value, 10) || 1) + Number(b.dataset.step)));
+  }));
+  document.querySelectorAll('dialog [data-close]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
+
+  // --- API ---
+  async function api(path, opts = {}) {
+    const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
+    const res = await fetch(API + path, { ...opts, headers });
+    let data = {};
+    try { data = await res.json(); } catch {}
+    if (!res.ok) { const e = new Error(data.error || 'Could not reach the list. Check your connection.'); e.status = res.status; throw e; }
+    return data;
+  }
+
+  async function load() {
+    try {
+      const data = await api('/api/items');
+      items = data.items || [];
+      // Forget tokens for dishes that no longer exist.
+      const ids = new Set(items.map(i => i.id));
+      let changed = false;
+      for (const id of Object.keys(tokens)) if (!ids.has(id)) { delete tokens[id]; changed = true; }
+      if (changed) store.set('tokens', tokens);
+      if (data.expiresAt) {
+        const d = new Date(data.expiresAt);
+        $('#expiry').textContent = `This list clears itself on ${d.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}.`;
+      }
+      render();
+    } catch (e) {
+      if (!items.length) $('#list').innerHTML = `<div class="empty card"></div>`, $('#list .empty').textContent = e.message;
+    }
+  }
+
+  // --- render ---
+  function render() {
+    const tally = $('#tally'); tally.innerHTML = '';
+    const total = items.length;
+    const people = new Set(items.map(i => i.name.toLowerCase())).size;
+    tally.append(chip(`<b>${total}</b> dish${total === 1 ? '' : 'es'}`), chip(`<b>${people}</b> ${people === 1 ? 'person' : 'people'}`));
+    for (const c of CATS) {
+      const n = items.filter(i => i.category === c.id).length;
+      tally.append(chip(`<span class="dot" style="background:var(--${c.id})"></span>${c.label} <b>${n}</b>`));
+    }
+
+    const list = $('#list'); list.innerHTML = '';
+    if (!items.length) {
+      list.innerHTML = '<div class="empty card">Nothing yet. Be the first to claim a dish.</div>';
+      return;
+    }
+    for (const c of CATS) {
+      const group = items.filter(i => i.category === c.id);
+      if (!group.length) continue;
+      const g = document.createElement('div'); g.className = 'group';
+      g.innerHTML = `<h3><span class="dot" style="background:var(--${c.id})"></span>${c.emoji} ${c.label}</h3><div class="items"></div>`;
+      const box = $('.items', g);
+      for (const it of group) box.append(itemEl(it));
+      list.append(g);
+    }
+  }
+
+  function chip(html) { const s = document.createElement('span'); s.className = 'chip'; s.innerHTML = html; return s; }
+
+  function itemEl(it) {
+    const el = document.createElement('div'); el.className = 'item card';
+    const mine = !!tokens[it.id];
+    el.innerHTML = `<div class="main"><div><span class="dish"></span> <span class="qtyb"></span></div>
+      <div class="who"></div><div class="note"></div></div><div class="actions"></div>`;
+    $('.dish', el).textContent = it.dish;
+    $('.qtyb', el).textContent = it.qty > 1 ? `×${it.qty}` : '';
+    const who = $('.who', el); who.textContent = 'from ' + it.name;
+    if (mine) { const b = document.createElement('span'); b.className = 'badge'; b.textContent = 'You'; who.append(b); }
+    const note = $('.note', el); if (it.note) note.textContent = it.note; else note.remove();
+    const actions = $('.actions', el);
+    if (mine) {
+      actions.append(btn('Edit', () => openEdit(it)));
+    } else if (it.hasPassword) {
+      actions.append(btn('🔒 Mine?', () => openUnlock(it), 'ghost'));
+    }
+    return el;
+  }
+
+  function btn(text, onClick, cls = '') { const b = document.createElement('button'); b.type = 'button'; b.textContent = text; if (cls) b.className = cls; b.addEventListener('click', onClick); return b; }
+
+  // --- add ---
+  let pendingAdd = null;
+  addForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = addForm;
+    pendingAdd = {
+      name: f.name.value.trim(), dish: f.dish.value.trim(), note: f.note.value.trim(),
+      category: f.category.value, qty: parseInt(f.qty.value, 10) || 1,
+    };
+    if (!pendingAdd.name || !pendingAdd.dish) return;
+    $('#pwAskForm').password.value = ''; $('#pwAskStatus').textContent = '';
+    $('#pwAsk').showModal();
+  });
+  $('#pwSkip').addEventListener('click', () => { $('#pwAsk').close(); submitAdd(null); });
+  $('#pwAskForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const pw = $('#pwAskForm').password.value;
+    if (pw.length < 4) { $('#pwAskStatus').textContent = 'Use at least 4 characters, or tap Skip.'; return; }
+    $('#pwAsk').close(); submitAdd(pw);
+  });
+
+  async function submitAdd(password) {
+    const status = $('#addStatus'); status.className = 'status'; status.textContent = 'Adding…';
+    const submit = $('button[type=submit]', addForm); submit.disabled = true;
+    try {
+      const data = await api('/api/items', { method: 'POST', body: JSON.stringify({ ...pendingAdd, password: password || undefined }) });
+      tokens[data.item.id] = data.token; store.set('tokens', tokens);
+      store.set('name', pendingAdd.name);
+      items.push(data.item); render();
+      addForm.dish.value = ''; addForm.note.value = ''; addForm.qty.value = 1;
+      status.textContent = `Added ${data.item.dish}. Thank you!`;
+      addForm.dish.focus();
+    } catch (e) {
+      status.className = 'status err'; status.textContent = e.message;
+    } finally { submit.disabled = false; }
+  }
+
+  // --- unlock on a new device ---
+  let unlockItem = null;
+  function openUnlock(it) {
+    unlockItem = it;
+    $('#unlockText').textContent = `Enter the password you set when you added "${it.dish}".`;
+    $('#unlockForm').password.value = ''; $('#unlockStatus').textContent = '';
+    $('#unlock').showModal();
+  }
+  $('#unlockForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pw = $('#unlockForm').password.value;
+    try {
+      const data = await api(`/api/items/${encodeURIComponent(unlockItem.id)}/unlock`, { method: 'POST', body: JSON.stringify({ password: pw }) });
+      tokens[unlockItem.id] = data.token; store.set('tokens', tokens);
+      $('#unlock').close(); render(); openEdit(unlockItem);
+    } catch (err) { $('#unlockStatus').textContent = err.message; }
+  });
+
+  // --- edit / remove ---
+  let editItem = null;
+  function openEdit(it) {
+    editItem = it;
+    const f = $('#editForm');
+    f.name.value = it.name; f.dish.value = it.dish; f.category.value = it.category; f.qty.value = it.qty; f.note.value = it.note || '';
+    f.newPassword.value = ''; f.removePassword.checked = false;
+    $('#pwLabel').firstChild.textContent = it.hasPassword ? 'Change password for other devices' : 'Add a password for other devices (optional)';
+    $('#rmPwLabel').style.display = it.hasPassword ? 'flex' : 'none';
+    $('#editStatus').textContent = '';
+    $('#edit').showModal();
+  }
+  async function authed(path, opts) {
+    try {
+      return await api(path, { ...opts, headers: { 'X-Edit-Token': tokens[editItem.id] || '' } });
+    } catch (e) {
+      if (e.status === 401 || e.status === 403) { delete tokens[editItem.id]; store.set('tokens', tokens); }
+      throw e;
+    }
+  }
+  $('#editForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = $('#editForm');
+    const body = { name: f.name.value.trim(), dish: f.dish.value.trim(), category: f.category.value, qty: parseInt(f.qty.value, 10) || 1, note: f.note.value.trim() };
+    if (f.newPassword.value) {
+      if (f.newPassword.value.length < 4) { $('#editStatus').textContent = 'Passwords need at least 4 characters.'; return; }
+      body.newPassword = f.newPassword.value;
+    } else if (f.removePassword.checked) body.removePassword = true;
+    try {
+      const data = await authed(`/api/items/${encodeURIComponent(editItem.id)}`, { method: 'PATCH', body: JSON.stringify(body) });
+      items = items.map(i => i.id === data.item.id ? data.item : i);
+      store.set('name', data.item.name);
+      $('#edit').close(); render();
+    } catch (err) { $('#editStatus').textContent = err.message; }
+  });
+  $('#removeBtn').addEventListener('click', async () => {
+    if (!confirm(`Remove "${editItem.dish}" from the list?`)) return;
+    try {
+      await authed(`/api/items/${encodeURIComponent(editItem.id)}`, { method: 'DELETE' });
+      items = items.filter(i => i.id !== editItem.id);
+      delete tokens[editItem.id]; store.set('tokens', tokens);
+      $('#edit').close(); render();
+    } catch (err) { $('#editStatus').textContent = err.message; }
+  });
+
+  load();
+  setInterval(() => { if (!document.hidden && !document.querySelector('dialog[open]')) load(); }, 20000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
+})();
+</script>
+</body>
+</html>

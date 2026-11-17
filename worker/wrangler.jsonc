@@ -1,0 +1,16 @@
+{
+  "name": "friendsgiving-2026",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-01",
+  "d1_databases": [
+    { "binding": "DB", "database_name": "friendsgiving-2026", "database_id": "44d35546-2233-4951-9f9c-55daa3855d7b" }
+  ],
+  "vars": {
+    // Pages that may call the API. Add your own fork's GitHub Pages URL here.
+    "ALLOWED_ORIGINS": "https://danielaja.github.io,http://localhost:8080,http://127.0.0.1:8080",
+    // After this date every entry is deleted (the "disposable" part).
+    "EXPIRES_AT": "2027-01-01T00:00:00Z"
+  },
+  // Daily clean-up: purges everything after EXPIRES_AT and drops old rate-limit rows.
+  "triggers": { "crons": ["17 9 * * *"] }
+}
